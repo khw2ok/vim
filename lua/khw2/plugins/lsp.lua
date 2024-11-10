@@ -1,6 +1,7 @@
 return {
   {
     "williamboman/mason.nvim",
+    --priority = 1000,
     config = function()
       require("mason").setup()
       require("mason").setup({
@@ -18,16 +19,53 @@ return {
       })
     end
   },
---  {
---    "williamboman/nvim-lsp-installer",
---    priority = 1000,
---    config = function()
---      require("nvim-lsp-installer").setup({
---        automatic_installaion = true,
---        --install_root_dir = path.concat { vim.fn.stdpath "data", "lsp_servers" }
---      })
---    end
---  },
+  {
+    "onsails/lspkind.nvim",
+    config = function()
+      require("lspkind").setup()
+    end
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    dependecies = {
+      "luckasRanarison/tailwind-tools.nvim",
+      "onsails/lspkind.nvim"
+    },
+    priority = 1000,
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        formatting = {
+          format = require("lspkind").cmp_format({
+            before = require("tailwind-tools.cmp").lspkind_format
+          })
+        },
+        snippet = {
+          expand = function(args)
+            vim.snippet.expand(args.body)
+          end
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        }),
+        sources = cmp.config.sources(
+          {
+            { name = "nvim_lsp" }
+          },
+          {
+            { name = "buffer" }
+          }
+        ),
+      })
+    end
+  },
+  {
+    "hrsh7th/cmp-nvim-lsp"
+  },
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -58,6 +96,7 @@ return {
         capabilities = capabilities,
         default_config = {
           root_dir = vim.fs.dirname(vim.fs.find({"pyproject.toml", "setup.py"}, { upward = true })[1])
+          --root_dir = vim.fs.dirname(vim.fs.find({ ".git", ".clang-format", "pyproject.toml", "setup.py" }, { upward = true })[1])
         }
       }
       require("lspconfig").vimls.setup {
@@ -92,6 +131,9 @@ return {
       require("lspconfig").svelte.setup {
         on_attach = on_attach,
         capabilities = capabilities
+        --default_config = {
+          --root_dir = vim.fs.dirname(vim.fs.find({ ".git", ".clang-format", "pyproject.toml", "setup.py" }, { upward = true })[1])
+        --}
       }
       require("lspconfig").ts_ls.setup {
         on_attach = on_attach,
@@ -103,35 +145,74 @@ return {
     end
   },
   {
-    "hrsh7th/nvim-cmp",
-    priority = 1000,
+    "williamboman/nvim-lsp-installer",
+    --priority = 500,
     config = function()
-      local cmp = require("cmp")
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            vim.snippet.expand(args.body)
-          end
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<C-e>"] = cmp.mapping.abort(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
-        }),
-        sources = cmp.config.sources(
-          {
-            { name = "nvim_lsp" }
-          },
-          {
-            { name = "buffer" }
-          }
-        )
+      require("nvim-lsp-installer").setup({
+        automatic_installaion = true,
+        --install_root_dir = path.concat { vim.fn.stdpath "data", "lsp_servers" }
       })
     end
   },
   {
-    "hrsh7th/cmp-nvim-lsp"
+    "L3MON4D3/LuaSnip",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    version = "v2.*",
+    build = "make install_jsregexp",
+    config = function()
+      local ls = require("luasnip")
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end
+  },
+  {
+    "luckasRanarison/tailwind-tools.nvim",
+    name = "tailwind-tools",
+    build = ":UpdateRemotePlugins",
+    dependecies = { "nvim-treesitter/nvim-treesitter" },
+    ft = { "html", "svelte" },
+    config = function()
+      require("tailwind-tools").setup({
+        server = {
+          override = true,
+          settings = {},
+          on_attach = function(client, bufnr) end
+        },
+        document_color = {
+          enabled = true,
+          kind = "inline",
+          inline_symbol = " ",
+          debounce = 200
+        },
+        conceal = {
+          enabled = false,
+          min_length = nil,
+          symbol = " ",
+          highlight = {
+            fg = "#38BDF8"
+          }
+        },
+        cmp = {
+          highlight = "foreground",
+        },
+        extensions = {
+          queries = {},
+          patterns = {}
+        }
+      })
+    end
+  },
+  --[[
+  {
+    "mrshmllow/document-color.nvim",
+    config = function()
+      require("document-color").setup({
+        mode = "background",
+      })
+    end
+  },
+  {
+    "razak17/tailwind-fold.nvim",
+    ft = { "html", "svelte" }
   }
+  ]]--
 }

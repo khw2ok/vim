@@ -20,7 +20,9 @@ return {
       vim.cmd "AirlineRefresh"
     end
   },
-  { "vim-airline/vim-airline-themes",
+  {
+    "vim-airline/vim-airline-themes",
+    priority = 500,
     config = function()
       vim.g.airline_theme = "khw2"
     end
