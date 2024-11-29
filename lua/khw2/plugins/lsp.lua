@@ -95,8 +95,24 @@ return {
         on_attach = on_attach,
         capabilities = capabilities,
         default_config = {
-          root_dir = vim.fs.dirname(vim.fs.find({"pyproject.toml", "setup.py"}, { upward = true })[1])
+          --root_dir = vim.fs.dirname(vim.fs.find({"pyproject.toml", "setup.py"}, { upward = true })[1])
           --root_dir = vim.fs.dirname(vim.fs.find({ ".git", ".clang-format", "pyproject.toml", "setup.py" }, { upward = true })[1])
+          root_dir = function()
+            return vim.loop.cwd()
+          end
+        },
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim" },
+            },
+            workspace = {
+              library = {
+                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                [vim.fn.stdpath("config") .. "/lua"] = true,
+              }
+            }
+          }
         }
       }
       require("lspconfig").vimls.setup {
@@ -144,7 +160,7 @@ return {
       }
     end
   },
-  {
+  --[[{
     "williamboman/nvim-lsp-installer",
     --priority = 500,
     config = function()
@@ -153,7 +169,7 @@ return {
         --install_root_dir = path.concat { vim.fn.stdpath "data", "lsp_servers" }
       })
     end
-  },
+  },]]--
   {
     "L3MON4D3/LuaSnip",
     dependencies = { "rafamadriz/friendly-snippets" },
