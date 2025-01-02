@@ -21,7 +21,7 @@ vim.opt.shellxquote = ""
 vim.cmd "set nu"
 
 vim.diagnostic.config({
-  virtual_text = false,
+  virtual_text = true,
   virtual_lines = false,
   signs = false,
   underline = true

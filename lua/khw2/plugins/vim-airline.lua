@@ -15,7 +15,8 @@ return {
         [""] = "V-B",
         ["s"] = "SEL",
         ["S"] = "S-L",
-        [""] = "S-B"
+        [""] = "S-B",
+        ["t"] = "TER"
       }
       vim.cmd "AirlineRefresh"
     end
