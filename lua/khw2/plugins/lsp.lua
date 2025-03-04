@@ -35,11 +35,11 @@ return {
     config = function()
       local cmp = require("cmp")
       cmp.setup({
-        formatting = {
+        --[[formatting = {
           format = require("lspkind").cmp_format({
             before = require("tailwind-tools.cmp").lspkind_format
           })
-        },
+        },]]--
         snippet = {
           expand = function(args)
             vim.snippet.expand(args.body)
@@ -169,7 +169,7 @@ return {
         --install_root_dir = path.concat { vim.fn.stdpath "data", "lsp_servers" }
       })
     end
-  },]]--
+  },
   {
     "L3MON4D3/LuaSnip",
     dependencies = { "rafamadriz/friendly-snippets" },
@@ -217,7 +217,6 @@ return {
       })
     end
   },
-  --[[
   {
     "mrshmllow/document-color.nvim",
     config = function()

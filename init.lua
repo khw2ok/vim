@@ -19,6 +19,7 @@ vim.opt.shellquote = ""
 vim.opt.shellxquote = ""
 
 vim.cmd "set nu"
+vim.cmd.colorscheme "quiet"
 
 vim.diagnostic.config({
   virtual_text = true,
@@ -27,8 +28,8 @@ vim.diagnostic.config({
   underline = true
 })
 
-vim.api.nvim_create_user_command("Unew", function()
-  pcall(function()
-    vim.cmd "belowright new"
-  end)
-end, {})
+--vim.api.nvim_create_user_command("Unew", function()
+--  pcall(function()
+--    vim.cmd "belowright new"
+--  end)
+--end, {})
